@@ -59,6 +59,9 @@ jobs:
     name: Deploy to Dev
     runs-on: ubuntu-latest
     needs: docker-build-push
+    env:
+      NAMESPACE: i27helpdesk-dev
+      SECRET_NAME: i27-auth-dev
     environment: 
       name: dev
     permissions: 
@@ -73,7 +76,19 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{env.GCP_PROJECT_ID}}
-      - name: Test GCloud Version
-        run: gcloud --version
-      - name: vms list 
-        run: gcloud compute instances list
+      # - name: Test GCloud Version
+      #   run: gcloud --version
+      # - name: vms list 
+      #   run: gcloud compute instances list
+      - name: Set the image tag
+        run: | 
+          IMAGE="${{ env.IMAGE_NAME}}:${{ needs.docker-build-push.outputs.image_tag}}"
+          sed -i "s|\${IMAGE}|${IMAGE}|g" k8s/deployment.yaml
+          sed -i "s|\${SECRET_NAME}|${{ env.SECRET_NAME}}" k8s/deployment.yaml
+      - name: Deploy the manifests
+        run: |
+          kubectl apply -f -n ${{ env.NAMESPACE }} k8s/deployment.yaml
+          kubectl apply -f -n ${{ env.NAMESPACE }} k8s/service.yaml
+      - name: Verify Rollout 
+        run: |
+          kubectl rollout status deployment/i27-auth -n ${{ env.NAMESPACE }} --timeout=120s
