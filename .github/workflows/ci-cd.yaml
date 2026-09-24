@@ -11,6 +11,9 @@ on:
 env:
   IMAGE_NAME: devopswithcloudhub/i27helpdesk-auth
   GCP_PROJECT_ID: project-297df0e3-3d6b-40a7-aab
+  GKE_CLUSTER: i27helpdesk-cluster
+  GKE_ZONE: us-east4-a
+
 jobs:
   # ------------------------ Job 1 : Build and Test ------------------------
   build-and-test:
@@ -80,6 +83,11 @@ jobs:
       #   run: gcloud --version
       # - name: vms list 
       #   run: gcloud compute instances list
+      - name: Get GKE Credentials
+        uses: 'google-github-actions/get-gke-credentials@v3'
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER}}
+          location: ${{ env.GKE_ZONE }}
       - name: Nodes list 
         run: |
           kubectl get nodes
