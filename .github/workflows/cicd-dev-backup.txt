@@ -7,16 +7,6 @@ on:
       - 'pom.xml'
       - 'Dockerfile'
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment to deploy to"
-        type: choice
-        options:
-          - dev
-          - test
-          - stage
-          - prod 
-        default: dev 
       
 env:
   IMAGE_NAME: devopswithcloudhub/i27helpdesk-auth
