@@ -80,6 +80,9 @@ jobs:
       #   run: gcloud --version
       # - name: vms list 
       #   run: gcloud compute instances list
+      - name: Nodes list 
+        run: |
+          kubectl get nodes
       - name: Set the image tag
         run: | 
           IMAGE="${{ env.IMAGE_NAME}}:${{ needs.docker-build-push.outputs.image_tag}}"
