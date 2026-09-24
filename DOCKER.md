@@ -4,7 +4,7 @@ This document explains the `Dockerfile` in this folder: what it does, why it's b
 way it is, and how to build/run/troubleshoot it. It complements the local (non-Docker)
 setup in [`../revision-final.md`](../revision-final.md).
 
-## What the Dockerfile does
+## What the Dockerfile does 
 
 It's a **two-stage** build:
 
