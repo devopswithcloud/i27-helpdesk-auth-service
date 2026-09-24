@@ -87,8 +87,8 @@ jobs:
           sed -i "s|\${SECRET_NAME}|${{ env.SECRET_NAME}}|g" k8s/deployment.yaml
       - name: Deploy the manifests
         run: |
-          kubectl apply -f -n ${{ env.NAMESPACE }} k8s/deployment.yaml
-          kubectl apply -f -n ${{ env.NAMESPACE }} k8s/service.yaml
+          kubectl apply -n ${{ env.NAMESPACE }} -f k8s/deployment.yaml
+          kubectl apply -n ${{ env.NAMESPACE }} -f k8s/service.yaml
       - name: Verify Rollout 
         run: |
           kubectl rollout status deployment/i27-auth -n ${{ env.NAMESPACE }} --timeout=120s
